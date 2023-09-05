@@ -173,4 +173,108 @@ kubectl get pod -o=custom-columns=NODE-NAME:.spec.nodeName,POD-NAME:.metadata.na
 
 ![Cluster Created](/images/image-6.png)
 
+### Step 7: Dockerize frontend app
+
+```dockerfile
+FROM node:16-alpine as builder
+
+LABEL author="IBRAR MUNIR"
+
+WORKDIR /app
+
+COPY ./package*.json ./
+
+RUN npm install --only=prod
+
+COPY ./ ./
+
+RUN npm run build
+
+FROM nginx
+
+EXPOSE 80
+
+COPY ./default.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder /app/build /var/www/html
+
+CMD ["npm", "run", "start"]
+```
+
+Overwrite the default nginx configuration with the following
+
+```nginx
+server {
+    listen 80 default_server;
+
+    server_name _;
+
+    location / {
+        root /var/www/html;
+        index index.html index.htm;
+        try_files $uri $uri/ =404
+    }
+}
+```
+
+### Step 7: Dockerize Admin app
+
+```dockerfile
+FROM node:16-alpine as builder
+
+LABEL author="IBRAR MUNIR"
+
+WORKDIR /app
+
+COPY ./package*.json ./
+
+RUN npm install --only=prod
+
+COPY ./ ./
+
+RUN npm run build
+
+FROM nginx
+
+EXPOSE 80
+
+COPY ./default.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder /app/build /var/www/html
+
+CMD ["npm", "run", "start"]
+```
+
+Overwrite the default nginx configuration with the following
+
+```nginx
+server {
+    listen 80 default_server;
+
+    server_name _;
+
+    location / {
+        root /var/www/html;
+        index index.html index.htm;
+        try_files $uri $uri/ =404
+    }
+}
+```
+
+### Step 6: Dockerize backend app
+
+```dockerfile
+FROM node:16-alpine
+
+LABEL author="IBRAR MUNIR"
+
+WORKDIR /app
+
+COPY ./package.json ./
+
+RUN npm install --only=prod
+
+COPY ./ ./
+
+CMD ["npm", "start"]
+```
+
 Deploying web application into kubernetes cluster

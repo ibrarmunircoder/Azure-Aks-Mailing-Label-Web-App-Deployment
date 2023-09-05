@@ -1,0 +1,6 @@
+@font-face {
+	font-family: 'KeplerStdRegular';
+    font-weight: 400;
+	src: url('./KeplerStdRegular.otf');
+	src: local('Kepler Std'),  url('./KeplerStdRegular.otf') format('otf'),;
+}
