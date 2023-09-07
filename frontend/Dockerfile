@@ -4,13 +4,11 @@ LABEL author="IBRAR MUNIR"
 
 WORKDIR /app
 
-USER node
-
-COPY --chown=node:node package*.json ./
+COPY  ./package*.json ./
 
 RUN npm ci --omit=dev && npm cache clean --force
 
-COPY --chown=node:node ./ ./ 
+COPY ./ ./ 
 
 RUN npm run build
 
