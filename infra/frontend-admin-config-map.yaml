@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-admin-config
+data:
+  backend_url: 'api.ibrarmunir.co/api'
+  admin_iframe_domain: 'admin.ibrarmunir.co'
+  token_field: 'X-Auth-Token-Mailing-App'

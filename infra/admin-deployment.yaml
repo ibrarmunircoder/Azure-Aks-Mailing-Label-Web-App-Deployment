@@ -1,0 +1,50 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: admin-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: admin
+  template:
+    metadata:
+      labels:
+        app: admin
+    spec:
+      containers:
+        - name: admin
+          image: mailingapp.azurecr.io/admin:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: REACT_APP_MAILING_BACKEND
+              valueFrom:
+                configMapKeyRef:
+                  name: frontend-admin-config
+                  key: backend_url
+            - name: REACT_APP_TOKEN_FIELD
+              valueFrom:
+                configMapKeyRef:
+                  name: frontend-admin-config
+                  key: token_field
+            - name: REACT_APP_IFRAME_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: frontend-admin-config
+                  key: admin_iframe_domain
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: admin-service
+spec:
+  type: ClusterIP
+  selector:
+    app: admin
+  ports:
+    - name: admin
+      protocol: TCP
+      targetPort: 80
+      port: 80

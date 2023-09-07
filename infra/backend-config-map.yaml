@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+data:
+  db_host: 'postgres-service'
+  db_port: '5432'
+  token_ttl: '1d'
+  white_list_domains: 'frontend.ibrarmunir.co,admin.ibrarmunir.co'
+  mailing_label_endpoint: 'https://returns.usps.com/services/'
+  tracking_label_endpoint: 'https://secure.shippingapis.com/ShippingAPI.dll/'
+  usps_username: '7B94PRODU4857'
+  usps_password: 'I0908AV44M2800O'
+  sender_name: 'Tina'
+  sender_email: 'tina@gmail.com'
+  mailgun_api_key: 'ba1aba4c537a480105957de2596892d7-81bd92f8-645b2004'
+  mailgun_domain: 'sandbox96aa8ded8963466b94b1368e8ad86c47.mailgun.org'
+  node_env: 'production'
+  basic_auth_password: 'c20dc7752af6576e16c5306aa1b08a38f4b1eba3'
+  auth_api_key: '8a2822410de12b2dd48bf793340b8974f4e6bc3e3d99998d63fc2fd9e24c'
+  easy_post_client_key: 'EZAK74999c20d3fa48c0b7583dccefb27902QnYC4LExwcurdaRpmN0f0g'
+  xps_connect_api_key: 'mt9OHMhEaOyU6SDFxCl55YGb8jSsaTZH'
+  xpx_connect_customer_id: 'CEC00389'
+  ftp_hostname: 'ctltestsite.com'
+  ftp_username: 'PactCollective@ctltestsite.com'
+  ftp_password: '!iVqfxkjmf4L7j$x'
