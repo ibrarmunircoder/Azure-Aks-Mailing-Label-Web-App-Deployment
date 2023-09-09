@@ -5,8 +5,8 @@
 These are the following challenges that we will be resolving after the hands on lab:
 
 1. Run containerization app on different hosts (Physical or virtual)
-2. Deploy app into those host (Physical or virtual) without ssh to individual host
-3. Implement Self Healing Capability (Allows container to be restarted or re-provisioned to different host if host has an insufficient capacity or hardware issue)
+2. Deploy the app into those hosts (Physical or virtual) without SSH to individual host
+3. Implement Self Healing Capability (Allows container to be restarted or re-provisioned to a different host if the host has an insufficient capacity or hardware issue)
 4. Improve High Availability of the application
 5. Implement Auto Scaling
 
