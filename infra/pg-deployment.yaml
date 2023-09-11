@@ -17,7 +17,7 @@ spec:
         - name: postgres
           image: postgres
           ports:
-            - containerPort: 80
+            - containerPort: 5432
           env:
             - name: POSTGRES_DB
               valueFrom:
@@ -41,7 +41,7 @@ spec:
       volumes:
         - name: postgres-data
           persistentVolumeClaim:
-            claimName: azurefile-pvc
+            claimName: my-azurefile-pvc
 ---
 apiVersion: v1
 kind: Service
@@ -54,5 +54,5 @@ spec:
   ports:
     - name: postgres
       protocol: TCP
-      targetPort: 80
-      port: 80
+      targetPort: 5432
+      port: 5432

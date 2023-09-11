@@ -2,6 +2,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: mailing-app-ingress-service
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
 spec:
   ingressClassName: nginx
   rules:
@@ -35,3 +37,13 @@ spec:
                 name: backend-service
                 port:
                   number: 80
+  tls:
+    - hosts:
+        - frontend.ibrarmunir.co
+      secretName: frontend-ibrarmunir-secret
+    - hosts:
+        - admin.ibrarmunir.co
+      secretName: admin-ibrarmunir-secret
+    - hosts:
+        - api.ibrarmunir.co
+      secretName: api-ibrarmunir-secret

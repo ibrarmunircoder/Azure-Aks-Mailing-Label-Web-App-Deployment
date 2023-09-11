@@ -5,14 +5,7 @@ dotenv.config();
 
 export class updateAddressesBrandId1683001441307 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.addColumn(
-      'brand',
-      new TableColumn({
-        name: 'templateName',
-        type: 'varchar',
-        isNullable: true,
-      }),
-    );
+    
     await queryRunner.addColumn(
       'address',
       new TableColumn({

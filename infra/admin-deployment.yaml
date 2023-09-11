@@ -15,9 +15,9 @@ spec:
     spec:
       containers:
         - name: admin
-          image: mailingapp.azurecr.io/admin:latest
+          image: mailingapp.azurecr.io/adminapp/admin
           ports:
-            - containerPort: 80
+            - containerPort: 3000
           env:
             - name: REACT_APP_MAILING_BACKEND
               valueFrom:
@@ -46,5 +46,5 @@ spec:
   ports:
     - name: admin
       protocol: TCP
-      targetPort: 80
+      targetPort: 3000
       port: 80
