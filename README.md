@@ -1,29 +1,44 @@
-# Azure-Aks-Web-App-Deployment-Practice
+# Azure-Aks-Web-App-Deployment
 
 ## Challenges:
 
 These are the following challenges that we will be resolving after the hands on lab:
 
-1. Run containerization app on different hosts (Physical or virtual)
-2. Deploy the app into those hosts (Physical or virtual) without SSH to individual host
-3. Implement Self Healing Capability (Allows container to be restarted or re-provisioned to a different host if the host has an insufficient capacity or hardware issue)
-4. Improve High Availability of the application
-5. Implement Auto Scaling
+1. ✅ Run containerization app on different hosts (Physical or virtual)
+2. ✅ Deploy app into those host (Physical or virtual) without ssh to individual host
+3. ✅ Implement Self Healing Capability (Allows container to be restarted or re-provisioned to different host if host has an insufficient capacity or hardware issue)
+4. ✅ Improve High Availability of the application
+5. ✅ Implement Auto Scaling
 
-## Learning Objectives:
+## 🔍🎯 Learning Objectives:
 
 After the lab, you will be able to:
 
-1. Deploy kubernetes by using Azure Aks Service
-2. Explore the different configuration options available into Azure Aks Service
-3. Dockerize frontend and backend applications
-4. learn how to kubernetes manifest files which is a declarative way to construct kubernetes objects
-5. Map External DNS Zone into Azure Public DNS Zone
-6. Enable HTTP Context-based Routing into the cluster
-7. Enable External DNS feature into the cluster
-8. Enable SSL/TLS support
-9. learn Azure CLI
-10. Create Azure Virtual Network and Subnets
+1. ✅ Deploy kubernetes by using Azure Aks Service
+2. ✅ Explore the different configuration options available into Azure Aks Service
+3. ✅ Dockerize frontend and backend applications
+4. ✅ learn how to kubernetes manifest files which is a declarative way to construct kubernetes objects
+5. ✅ Map External DNS Zone into Azure Public DNS Zone
+6. ✅ Enable HTTP Context-based Routing into the cluster
+7. ✅ Enable External DNS feature into the cluster
+8. ✅ Enable SSL/TLS support
+9. ✅ learn Azure CLI
+10. ✅ Create Azure Virtual Network and Subnets
+
+### ⚙ Tools & Technologies Used:
+
+![HTML5](https://img.shields.io/badge/-HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/-CSS3-1572B6?style=flat-square&logo=css3)
+![TypeScript](https://img.shields.io/badge/-TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white)
+![JavaScript](https://img.shields.io/badge/-JavaScript-black?style=flat-square&logo=javascript)
+![Nodejs](https://img.shields.io/badge/-Nodejs-339933?style=flat-square&logo=nodedotjs&logoColor=white)
+![React](https://img.shields.io/badge/-React-black?style=flat-square&logo=react)
+![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?style=flat-square&logo=kubernetes&logoColor=white)
+![Microsoft Azure](https://img.shields.io/badge/Microsoft%20-0078D4?style=flat-square&logo=microsoftazure)
+![NestJs](https://img.shields.io/badge/Nestjs-E0234E?style=flat-square&logo=nestjs)
+![Yaml](https://img.shields.io/badge/YAML-CB171E?style=flat-square&logo=yaml)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)
 
 ### Step 1:
 
@@ -176,7 +191,7 @@ kubectl get pod -o=custom-columns=NODE-NAME:.spec.nodeName,POD-NAME:.metadata.na
 ### Step 7: Dockerize frontend app
 
 ```dockerfile
-FROM node:16-alpine as builder
+FROM node:16-alpine
 
 LABEL author="IBRAR MUNIR"
 
@@ -188,36 +203,13 @@ RUN npm ci --omit=dev && npm cache clean --force
 
 COPY ./ ./
 
-RUN npm run build
-
-FROM nginx
-
-EXPOSE 80
-
-COPY ./default.conf /etc/nginx/conf.d/default.conf
-COPY --from=builder /app/build /var/www/html
-```
-
-Overwrite the default nginx configuration with the following
-
-```nginx
-server {
-    listen 80 default_server;
-
-    server_name _;
-
-    location / {
-        root /var/www/html;
-        index index.html index.htm;
-        try_files $uri $uri/ /index.html
-    }
-}
+CMD ["npm", "run", "start"]
 ```
 
 ### Step 7: Dockerize Admin app
 
 ```dockerfile
-FROM node:16-alpine as builder
+FROM node:16-alpine
 
 LABEL author="IBRAR MUNIR"
 
@@ -229,30 +221,7 @@ RUN npm ci --omit=dev && npm cache clean --force
 
 COPY ./ ./
 
-RUN npm run build
-
-FROM nginx
-
-EXPOSE 80
-
-COPY ./default.conf /etc/nginx/conf.d/default.conf
-COPY --from=builder /app/build /var/www/html
-```
-
-Overwrite the default nginx configuration with the following
-
-```nginx
-server {
-    listen 80 default_server;
-
-    server_name _;
-
-    location / {
-        root /var/www/html;
-        index index.html index.htm;
-        try_files $uri $uri/ /index.html
-    }
-}
+CMD ["npm", "run", "start"]
 ```
 
 ### Step 6: Dockerize backend app
@@ -291,6 +260,10 @@ az acr create --resource-group ${AKS_RESOURCE_GROUP} \
 az aks update -n ${AKS_CLUSTER} -g ${AKS_RESOURCE_GROUP} --attach-acr ${ACR_REGISTRY_NAME}
 ```
 
+### Attach AKS System Identity as User Identity to ACR Repo
+
+![Identity Attached](/images/image-22.png)
+
 Once you have attached ACR Repository to AKS Cluster, open the management console and enable username and password by going into the access keys tab under settings.
 
 ![Enable User Credentials](/images/image-7.png)
@@ -307,7 +280,7 @@ docker login mailingapp.azurecr.io
 
 ```cmd
 # Run this command under the frontend folder
-docker build -t mailingapp.azurecr.io/frontend:latest .
+docker build -t mailingapp.azurecr.io/frontendapp/frontend:latest .
 ```
 
 ![frontend image build](/images/image-9.png)
@@ -316,7 +289,7 @@ docker build -t mailingapp.azurecr.io/frontend:latest .
 
 ```cmd
 # Run this command under the admin folder
-docker build -t mailingapp.azurecr.io/admin:latest .
+docker build -t mailingapp.azurecr.io/adminapp/admin:latest .
 ```
 
 ### Step 12: Build docker image of backend
@@ -354,8 +327,10 @@ kubectl get ns
 ### Step 16: Create Ingress Static IP
 
 ```cmd
+# Get the resource group name of the AKS cluster
+AKS_NODE_RG=$(az aks show --resource-group aks-prod --name aksprod1 --query nodeResourceGroup -o tsv)
 # TEMPLATE - Create a public IP address with the static allocation
-az network public-ip create --resource-group ${AKS_RESOURCE_GROUP} --name ingress-ip --sku Standard --allocation-method static --query publicIp.ipAddress -o tsv
+az network public-ip create --resource-group ${AKS_NODE_RG} --name ingress-ip --sku Standard --allocation-method static --query publicIp.ipAddress -o tsv
 ```
 
 ![ingress ip](/images/image-15.png)
@@ -374,7 +349,7 @@ helm install ingress-nginx ingress-nginx/ingress-nginx \
     --set controller.nodeSelector."kubernetes\.io/os"=linux \
     --set defaultBackend.nodeSelector."kubernetes\.io/os"=linux \
     --set controller.service.externalTrafficPolicy=Local \
-    --set controller.service.loadBalancerIP="172.172.145.132"
+    --set controller.service.loadBalancerIP="172.178.15.188"
 
 # List Pods
 kubectl get pods -n ingress
@@ -447,7 +422,7 @@ az account show --query "id"
   "subscriptionId": "63bfb3d2-54e2-42ee-884b-334e2ab70b82",
   "resourceGroup": "aks-prod",
   "useManagedIdentityExtension": true,
-  "userAssignedIdentityID": "dbe130eb-c498-4bdb-9682-7b51a6611def"
+  "userAssignedIdentityID": "ca623f34-5698-46fa-bf19-1a71a0f27c2a"
 }
 ```
 
@@ -544,7 +519,9 @@ spec:
 kubectl logs -f $(kubectl get po | egrep -o 'external-dns[A-Za-z0-9-]+')
 ```
 
-Step 21: Review Ingress Resource
+![Deployed](/images/image-20.png)
+
+## Step 21: Review Ingress Resource
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -586,4 +563,227 @@ spec:
                   number: 80
 ```
 
-![Deployed](/images/image-20.png)
+## Step 22: Apply Kubernetes Manifests
+
+```cmd
+kubectl apply -f azure-file-storage-sc.yaml
+
+kubectl apply -f pg-pvc.yaml
+
+kubectl apply -f pg-password.yaml
+
+kubectl apply -f backend-config-map.yaml
+
+kubectl apply -f frontend-admin-config-map.yaml
+
+kubectl apply -f pg-deployment.yaml
+
+kubectl apply -f .
+```
+
+![Applied Manifests](/images/image-23.png)
+
+## Step 23: Create SuperAdmin User to Access Admin Panel
+
+```url
+http://api.ibrarmunir.co/api/auth/admin/register
+```
+
+```json
+{
+  "firstName": "Super Admin",
+  "lastName": "Mailing label",
+  "email": "superadmin@gmail.com",
+  "password": "12345678",
+  "role": "superadmin"
+}
+```
+
+![Super Admin](/images/image-24.png)
+
+## Step 24: Mailing Label Form
+
+```url
+http://frontend.ibrarmunir.co/
+```
+
+![Frontend Form](/images/image-26.png)
+
+## Step 24: Admin Panel
+
+```url
+http://admin.ibrarmunir.co/
+```
+
+![Frontend Form](/images/image-27.png)
+![Frontend Form](/images/image-28.png)
+
+![DNS Records](/images/image-25.png)
+
+Let's enable SSL/TLS support for the secure communication
+
+## Step 25: Update Ingress Resource
+
+```yam
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mailing-app-ingress-service
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: frontend.ibrarmunir.co
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend-service
+                port:
+                  number: 80
+    - host: admin.ibrarmunir.co
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: admin-service
+                port:
+                  number: 80
+    - host: api.ibrarmunir.co
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: backend-service
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - frontend.ibrarmunir.co
+      secretName: frontend-ibrarmunir-secret
+    - hosts:
+        - admin.ibrarmunir.co
+      secretName: admin-ibrarmunir-secret
+    - hosts:
+        - api.ibrarmunir.co
+      secretName: api-ibrarmunir-secret
+```
+
+## Step 26: Create Cluster Issuer
+
+```yaml
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt
+spec:
+  acme:
+    # The ACME server URL
+    server: https://acme-v02.api.letsencrypt.org/directory
+    # Email address used for ACME registration
+    email: ibrarmunir009@gmail.com
+    # Name of a secret used to store the ACME account private key
+    privateKeySecretRef:
+      name: letsencrypt
+    solvers:
+      - http01:
+          ingress:
+            ingressClassName: nginx
+```
+
+## Step 27: Install Cert Manager
+
+```t
+# Label the ingress-basic namespace to disable resource validation
+kubectl label namespace ingress cert-manager.io/disable-validation=true
+
+# Add the Jetstack Helm repository
+helm repo add jetstack https://charts.jetstack.io
+
+# Update your local Helm chart repository cache
+helm repo update
+
+# Install the cert-manager Helm chart
+helm install \
+  cert-manager jetstack/cert-manager \
+  --namespace ingress-basic \
+  --version v1.12.4 \
+  --set installCRDs=true
+
+## SAMPLE OUTPUT
+Kalyans-MacBook-Pro:12-ExternalDNS-for-AzureDNS-on-AKS kdaida$ helm install \
+>   cert-manager jetstack/cert-manager \
+>   --namespace ingress-basic \
+>   --version v1.8.2 \
+>   --set installCRDs=true
+NAME: cert-manager
+LAST DEPLOYED: Mon Jul 11 17:26:31 2022
+NAMESPACE: ingress-basic
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+cert-manager v1.8.2 has been deployed successfully!
+
+In order to begin issuing certificates, you will need to set up a ClusterIssuer
+or Issuer resource (for example, by creating a 'letsencrypt-staging' issuer).
+
+More information on the different types of issuers and how to configure them
+can be found in our documentation:
+
+https://cert-manager.io/docs/configuration/
+
+For information on how to configure cert-manager to automatically provision
+Certificates for Ingress resources, take a look at the `ingress-shim`
+documentation:
+
+https://cert-manager.io/docs/usage/ingress/
+Kalyans-MacBook-Pro:12-ExternalDNS-for-AzureDNS-on-AKS kdaida$
+
+
+# Verify Cert Manager pods
+kubectl get pods --namespace ingress
+
+# Verify Cert Manager Services
+kubectl get svc --namespace ingress
+```
+
+![Cert Manager](/images/image-29.png)
+
+### Step 28: Deploy Cluster Issuer
+
+```t
+# Deploy Cluster Issuer
+kubectl apply -f cluster-issuer.yml
+
+# List Cluster Issuer
+kubectl get clusterissuer
+
+# Describe Cluster Issuer
+kubectl describe clusterissuer letsencrypt
+```
+
+## Step 29: Verify certificates
+
+- Certificate Request, Generation, Approal and Download and be ready might take from 1 hour to couple of days if we make any mistakes and also fail.
+- For me it took, only 5 minutes to get the certificate from **https://letsencrypt.org/**
+
+```t
+# Verify Cert Manager Pod Logs
+kubectl get pods -n ingress-basic
+kubectl  logs -f <cert-manager-55d65894c7-sx62f> -n ingress-basic #Replace Pod name
+
+# Verify SSL Certificates (It should turn to True)
+kubectl get certificate
+```
+
+![Certificates](/images/image-30.png)
+![frontend certificate](/images/image-31.png)
+![admin certificate](/images/image-32.png)

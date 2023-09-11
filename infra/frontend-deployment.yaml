@@ -15,15 +15,20 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: mailingapp.azurecr.io/frontend:latest
+          image: mailingapp.azurecr.io/frontendapp/frontend
           ports:
-            - containerPort: 80
+            - containerPort: 3000
           env:
             - name: REACT_APP_MAILING_BACKEND
               valueFrom:
                 configMapKeyRef:
                   name: frontend-admin-config
                   key: backend_url
+            - name: REACT_APP_BASIC_AUTH_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: frontend-admin-config
+                  key: basic_auth_password
             - name: REACT_APP_TOKEN_FIELD
               valueFrom:
                 configMapKeyRef:
@@ -41,5 +46,5 @@ spec:
   ports:
     - name: frontend
       protocol: TCP
-      targetPort: 80
+      targetPort: 3000
       port: 80

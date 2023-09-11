@@ -13,9 +13,18 @@ spec:
       labels:
         app: backend
     spec:
+      initContainers:
+        - name: init-db
+          image: busybox:1.31
+          command:
+            [
+              'sh',
+              '-c',
+              'echo -e "Checking for the availability of Postgres Server deployment"; while ! nc -z postgres-service 5432; do sleep 1; printf "-"; done; echo -e "  >> Postgres DB Server has started";',
+            ]
       containers:
         - name: backend
-          image: mailingapp.azurecr.io/backend:latest
+          image: mailingapp.azurecr.io/backendapp/backend:latest
           ports:
             - containerPort: 8000
           env:
@@ -49,6 +58,11 @@ spec:
                 configMapKeyRef:
                   name: backend-config
                   key: white_list_domains
+            - name: EMAIL_DISABLED_PRODUCTS
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: email_domains_disabled
             - name: MAILING_LABEL_ENDPOINT
               valueFrom:
                 configMapKeyRef:

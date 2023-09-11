@@ -3,6 +3,7 @@ kind: ConfigMap
 metadata:
   name: frontend-admin-config
 data:
-  backend_url: 'api.ibrarmunir.co/api'
+  backend_url: 'https://api.ibrarmunir.co/api'
   admin_iframe_domain: 'admin.ibrarmunir.co'
+  basic_auth_password: 'c20dc7752af6576e16c5306aa1b08a38f4b1eba3'
   token_field: 'X-Auth-Token-Mailing-App'
